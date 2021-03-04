@@ -2,7 +2,7 @@
 
 Foi desenvolvido uma API com a linguagem C# usando o .Net Core para resolver o problema apresentado no [backend-challenge](https://github.com/itidigital/backend-challenge)
 
-O projeto Validation implementa a classe PasswordValidation, esta é responsável em validar a senha e retornar o boolean indicando se a senha é valida ou não. Esta camada foi implementada para ser testável. O projeto de Teste fará referencia e consumo das implementações realizadas nesta camada.
+O projeto Validation implementa a classe PasswordValidation, esta é responsável em validar a senha e retornar o boolean indicando se a senha é valida ou não. Esta camada foi implementada para ser testável. O projeto de Teste faz referencia das implementações realizadas para cada classe de validacao.
 
 Também foi construído uma extensão para a classe PasswordValidation para testar a força da senha.
 

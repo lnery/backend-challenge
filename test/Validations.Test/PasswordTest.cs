@@ -4,6 +4,7 @@ using Xunit;
 using Validations.Extension;
 using Validations.Constants;
 using Validations.Enums;
+using Validations.Interfaces;
 
 namespace Validations.Test
 {
@@ -18,7 +19,7 @@ namespace Validations.Test
         [InlineData("AbTp9!fok")]
         public void SenhaDeveSerValida(string senha)
         {
-            var isValid = new PasswordValidation(senha).IsValid();
+            var isValid = new PasswordValidation(new PasswordSize(), new PasswordDigits(), new PasswordLowerCaseLetters(), new PasswordUpperCaseLetters(), new PasswordSpecialCharacters(), new PasswordRepeatedCharacters()).IsValid(senha);
 
             Assert.True(isValid, "A senha informada e invalida.");
         }
@@ -30,9 +31,10 @@ namespace Validations.Test
         [InlineData("aaaaaaaaa")]
         public void SenhaDevePossuir9CaracteresOuMais(string senha)
         {
-            var password = new PasswordValidation(senha);
+            var password = new PasswordSize();
+            password.IsValid(senha);
             
-            Assert.True(password.QuantityOfCharacters >= 9, "A senha deve possuir 9 ou mais caracteres.");
+            Assert.True(password.GetQuantityOfCharacters() >= 9, "A senha deve possuir 9 ou mais caracteres.");
         }
 
         [Theory]
@@ -41,9 +43,10 @@ namespace Validations.Test
         [InlineData("aaa1aaaaa")]
         public void SenhaDevePossuirAoMenos1Digito(string senha)
         {
-            var password = new PasswordValidation(senha);
+            var password = new PasswordDigits();
+            password.IsValid(senha);
 
-            Assert.True(password.QuantityOfDigits >= PasswordSettings.NUMBER_OF_DIGITS, $"A senha deve possuir ao menos {PasswordSettings.NUMBER_OF_DIGITS} dígito(s).");
+            Assert.True(password.GetQuantityOfDigits() >= PasswordSettings.NUMBER_OF_DIGITS, $"A senha deve possuir ao menos {PasswordSettings.NUMBER_OF_DIGITS} dígito(s).");
         }
 
         [Theory]
@@ -51,9 +54,10 @@ namespace Validations.Test
         [InlineData("AAa")]
         public void SenhaDevePossuirAoMenos1LetraMinuscula(string senha)
         {
-            var password = new PasswordValidation(senha);
+            var password = new PasswordLowerCaseLetters();
+            password.IsValid(senha);
 
-            Assert.True(password.QuantityOfLowerCaseLetters >= PasswordSettings.NUMBER_OF_LOWER_CASE, $"A senha deve possuir ao menos {PasswordSettings.NUMBER_OF_LOWER_CASE} letra(s) minúscula(s).");
+            Assert.True(password.GetQuantityOfLowerCaseLetters() >= PasswordSettings.NUMBER_OF_LOWER_CASE, $"A senha deve possuir ao menos {PasswordSettings.NUMBER_OF_LOWER_CASE} letra(s) minúscula(s).");
         }
 
         [Theory]
@@ -61,9 +65,10 @@ namespace Validations.Test
         [InlineData("aaA")]
         public void SenhaDevePossuirAoMenos1LetraMaiuscula(string senha)
         {
-            var password = new PasswordValidation(senha);
+            var password = new PasswordUpperCaseLetters();
+            password.IsValid(senha);
 
-            Assert.True(password.QuantityOfUpperCaseLetters >= PasswordSettings.NUMBER_OF_UPPER_CASE, $"A senha deve possuir ao menos {PasswordSettings.NUMBER_OF_UPPER_CASE} letra(s) maiúscula(s).");
+            Assert.True(password.GetQuantityOfUpperCaseLetters() >= PasswordSettings.NUMBER_OF_UPPER_CASE, $"A senha deve possuir ao menos {PasswordSettings.NUMBER_OF_UPPER_CASE} letra(s) maiúscula(s).");
         }
 
         [Theory]
@@ -73,9 +78,10 @@ namespace Validations.Test
         [InlineData("aa!@#$%^&*()_+{}?~`")]
         public void SenhaDevePossuirAoMenos1CaracterEspecial(string senha)
         {
-            var password = new PasswordValidation(senha);
+            var password = new PasswordSpecialCharacters();
+            password.IsValid(senha);
 
-            Assert.True(password.QuantityOfSpecialCharacters >= PasswordSettings.NUMBER_OF_SPECIAL_CHARS, $"A senha deve possuir ao menos {PasswordSettings.NUMBER_OF_SPECIAL_CHARS} caractere(s) especial(ais).");
+            Assert.True(password.GetQuantityOfSpecialCharacters() >= PasswordSettings.NUMBER_OF_SPECIAL_CHARS, $"A senha deve possuir ao menos {PasswordSettings.NUMBER_OF_SPECIAL_CHARS} caractere(s) especial(ais).");
         }
 
         [Theory]
@@ -85,18 +91,19 @@ namespace Validations.Test
         //[InlineData("abcdefgh")]
         public void SenhaNaoDevePossuirCaracteresRepetidos(string senha)
         {
-            var password = new PasswordValidation(senha);
+            var password = new PasswordRepeatedCharacters();
+            password.IsValid(senha);
 
-            Assert.True(password.ContainsRepeatedCharacters, $"A senha não possuir caracteres repetidos");
+            Assert.True(password.ContainsRepeatedCharacters(), $"A senha não possuir caracteres repetidos");
         }
 
         [Theory]
         [InlineData("AbTp9!fok")]
         public void SenhaDeveSerNoMinimoAceitavel(string senha)
         {
-            var password = new PasswordValidation(senha);
+            var password = new PasswordValidation(new PasswordSize(), new PasswordDigits(), new PasswordLowerCaseLetters(), new PasswordUpperCaseLetters(), new PasswordSpecialCharacters(), new PasswordRepeatedCharacters());
 
-            var isValid = new PasswordValidation(senha).IsValid();
+            var isValid = password.IsValid(senha);
 
             Assert.True(isValid, "A senha informada e invalida.");
 

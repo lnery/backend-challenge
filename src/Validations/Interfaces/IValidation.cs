@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Validations.Interfaces
+﻿namespace Validations.Interfaces
 {
     public interface IValidation
     {
-        public bool IsValid();
+        public bool IsValid(string password);
     }
 }

@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Validations;
 using Validations.Extension;
+using Validations.Interfaces;
 
 namespace API.Controllers
 {
@@ -17,28 +18,25 @@ namespace API.Controllers
 
         private readonly ILogger<PasswordController> _logger;
 
-        public PasswordController(ILogger<PasswordController> logger)
+        public PasswordController(ILogger<PasswordController> logger, IPasswordValidation passwordValidation)
         {
             _logger = logger;
+            _passwordValidation = (PasswordValidation)passwordValidation;
         }
 
         [HttpPost("Validate")]
         public async Task<bool> ValidatePassword(string password)
         {
-            var passwordValidation = new PasswordValidation(password);
-
-            return await Task.FromResult<bool>(passwordValidation.IsValid());
+            return await Task.FromResult<bool>(_passwordValidation.IsValid(password));
         }
 
         [HttpGet("PasswordStrength")]
         public async Task<string> GetPasswordStrength(string password)
         {
-            var passwordValidation = new PasswordValidation(password);
-
-            if (!passwordValidation.IsValid())
+            if (!_passwordValidation.IsValid(password))
                 return await Task.FromResult<string>("A senha é inválida");
 
-            var passwordStrength = passwordValidation.GetPasswordStrength();
+            var passwordStrength = _passwordValidation.GetPasswordStrength();
 
             return passwordStrength switch
             {

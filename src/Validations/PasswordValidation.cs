@@ -1,89 +1,36 @@
-﻿using System;
-using System.Text.RegularExpressions;
-using Validations.Constants;
-using Validations.Interfaces;
+﻿using Validations.Interfaces;
 
 namespace Validations
 {
-    public class PasswordValidation : IValidation
+    public class PasswordValidation : IPasswordValidation
     {
-        public readonly string _password;
+        public string password { get; private set; }
 
-        public int QuantityOfCharacters
-        { 
-            get { 
-                return Math.Min(PasswordSettings.NUMBER_OF_CHARACTERS, _password.Length); 
-            } 
-        }
-        public int QuantityOfDigits
-        {
-            get
-            {
-                return _password.Length - Regex.Replace(_password, "[0-9]", "").Length;
-            }
-        }
-        public int QuantityOfLowerCaseLetters
-        {
-            get
-            {
-                return _password.Length - Regex.Replace(_password, "[a-z]", "").Length;
-            }
-        }
-        public int QuantityOfUpperCaseLetters
-        {
-            get
-            {
-                return _password.Length - Regex.Replace(_password, "[A-Z]", "").Length;
-            }
-        }
-        public int QuantityOfSpecialCharacters
-        {
-            get
-            {
-                return Regex.Replace(_password, "[a-zA-Z0-9]", "").Length;
-            }
-        }
-        public bool ContainsRepeatedCharacters
-        {
-            get
-            {
-                var regex = new Regex(@"(\w)*.*\1");
+        public readonly IPasswordSize passwordSize;
+        public readonly IPasswordDigits passwordDigits;
+        public readonly IPasswordLowerCaseLetters passwordLowerCaseLetters;
+        public readonly IPasswordUpperCaseLetters passwordUpperCaseLetters;
+        public readonly IPasswordSpecialCharacters passwordSpecialCharacters;
+        public readonly IPasswordRepeatedCharacters passwordRepeatedCharacters;
 
-                return regex.IsMatch(_password);
-            }
+        public PasswordValidation(IPasswordSize passwordSize, IPasswordDigits passwordDigits, IPasswordLowerCaseLetters passwordLowerCaseLetters, IPasswordUpperCaseLetters passwordUpperCaseLetters, IPasswordSpecialCharacters passwordSpecialCharacters, IPasswordRepeatedCharacters passwordRepeatedCharacters)
+        {
+            this.passwordSize = passwordSize;
+            this.passwordDigits = passwordDigits;
+            this.passwordLowerCaseLetters = passwordLowerCaseLetters;
+            this.passwordUpperCaseLetters = passwordUpperCaseLetters;
+            this.passwordSpecialCharacters = passwordSpecialCharacters;
+            this.passwordRepeatedCharacters = passwordRepeatedCharacters;
         }
 
-        public PasswordValidation(string password)
+        public bool IsValid(string password)
         {
             if (string.IsNullOrEmpty(password))
-                throw new ArgumentException("A senha não foi informada");
+                return false;
 
-            this._password = password;
-        }
+            this.password = password;
 
-        public bool IsValid()
-        {
-            return ValidateSize() && ValidateNumberOfDigits() && ValidateNumberOfLowerCaseLetters() && ValidaNumberOfUpperCaseLetters() && !ContainsRepeatedCharacters;
-        }
-
-        private bool ValidateSize()
-        {
-            return QuantityOfCharacters >= PasswordSettings.NUMBER_OF_CHARACTERS;
-        }
-
-        private bool ValidateNumberOfDigits()
-        {
-            return QuantityOfDigits >= PasswordSettings.NUMBER_OF_DIGITS;
-        }
-
-        private bool ValidateNumberOfLowerCaseLetters()
-        {
-            return QuantityOfLowerCaseLetters >= PasswordSettings.NUMBER_OF_LOWER_CASE;
-        }
-
-        private bool ValidaNumberOfUpperCaseLetters()
-        {
-            return QuantityOfUpperCaseLetters >= PasswordSettings.NUMBER_OF_UPPER_CASE;
+            return passwordSize.IsValid(password) && passwordDigits.IsValid(password) && passwordLowerCaseLetters.IsValid(password) && passwordUpperCaseLetters.IsValid(password) && passwordSpecialCharacters.IsValid(password) && passwordRepeatedCharacters.IsValid(password);
         }
     }
 }

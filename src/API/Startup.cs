@@ -11,6 +11,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Validations;
+using Validations.Interfaces;
 
 namespace API
 {
@@ -26,6 +28,7 @@ namespace API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            InjectDependencies(services);
 
             services.AddControllers();
             services.AddSwaggerGen(c =>
@@ -55,6 +58,17 @@ namespace API
             {
                 endpoints.MapControllers();
             });
+        }
+
+        public void InjectDependencies(IServiceCollection services)
+        {
+            services.AddScoped<IPasswordSize, PasswordSize>();
+            services.AddScoped<IPasswordDigits, PasswordDigits>();
+            services.AddScoped<IPasswordLowerCaseLetters, PasswordLowerCaseLetters>();
+            services.AddScoped<IPasswordUpperCaseLetters, PasswordUpperCaseLetters>();
+            services.AddScoped<IPasswordSpecialCharacters, PasswordSpecialCharacters>();
+            services.AddScoped<IPasswordRepeatedCharacters, PasswordRepeatedCharacters>();
+            services.AddScoped<IPasswordValidation, PasswordValidation>();
         }
     }
 }

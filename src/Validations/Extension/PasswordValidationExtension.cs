@@ -26,14 +26,14 @@ namespace Validations.Extension
 
         private static int GetPasswordScore(PasswordValidation passwordValidation)
         {
-            if (string.IsNullOrEmpty(passwordValidation._password)) return 0;
+            if (string.IsNullOrEmpty(passwordValidation.password)) return 0;
 
-            int scoreBySize = GetScoreBySize(passwordValidation.QuantityOfCharacters);
-            int scoreByLowerCase = GetScoreByLowerCase(passwordValidation.QuantityOfLowerCaseLetters);
-            int scoreScoreByUpperCase = GetScoreByUpperCase(passwordValidation.QuantityOfUpperCaseLetters);
-            int scoreByDigits = GetScoreByDigits(passwordValidation.QuantityOfDigits);
-            int scoreBySpecialCharacters = GetScoreBySpecialCharacters(passwordValidation.QuantityOfSpecialCharacters);
-            int scoreByRepeatedSequence = GetScoreByRepeatedSequence(passwordValidation.ContainsRepeatedCharacters);
+            int scoreBySize = GetScoreBySize(passwordValidation.passwordSize.GetQuantityOfCharacters());
+            int scoreByLowerCase = GetScoreByLowerCase(passwordValidation.passwordLowerCaseLetters.GetQuantityOfLowerCaseLetters());
+            int scoreScoreByUpperCase = GetScoreByUpperCase(passwordValidation.passwordUpperCaseLetters.GetQuantityOfUpperCaseLetters());
+            int scoreByDigits = GetScoreByDigits(passwordValidation.passwordDigits.GetQuantityOfDigits());
+            int scoreBySpecialCharacters = GetScoreBySpecialCharacters(passwordValidation.passwordSpecialCharacters.GetQuantityOfSpecialCharacters());
+            int scoreByRepeatedSequence = GetScoreByRepeatedSequence(!passwordValidation.passwordRepeatedCharacters.ContainsRepeatedCharacters());
 
             return scoreBySize + scoreByLowerCase + scoreScoreByUpperCase + scoreByDigits + scoreBySpecialCharacters - scoreByRepeatedSequence;
         }

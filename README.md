@@ -21,7 +21,7 @@ Para executar a API é nessário possuir o [CLI do .Net Core](https://dotnet.mic
 Realizar o download do codigo fonte e executar os comandos abaixo na mesma pasta do download. Se você optou por fazer o download do arquivo zip, descompacte o arquivo antes.
 
 ```bash
-cd /src/API
+cd src/API
 dotnet restore
 dotnet run
 ```
@@ -44,7 +44,7 @@ Se ocorrer a mensagem "Sua conexão não é particular", é porque estamos estam
 Para testar a validação da senha seguir os passos abaixo:
 
 ```bash
-cd /test/Validation.Test
+cd test/Validation.Test
 dotnet restore
 dotnet test
 ```

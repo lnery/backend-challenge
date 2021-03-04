@@ -87,14 +87,14 @@ namespace Validations.Test
         [Theory]
         //[InlineData("aa")]
         //[InlineData("abbc")]
-        [InlineData("aabc")]
-        //[InlineData("abcdefgh")]
+        //[InlineData("aabc")]
+        [InlineData("abcdefgh")]
         public void SenhaNaoDevePossuirCaracteresRepetidos(string senha)
         {
             var password = new PasswordRepeatedCharacters();
             password.IsValid(senha);
 
-            Assert.True(password.ContainsRepeatedCharacters(), $"A senha não possuir caracteres repetidos");
+            Assert.False(password.ContainsRepeatedCharacters(), $"A senha não deve possuir caracteres repetidos em sequencia");
         }
 
         [Theory]

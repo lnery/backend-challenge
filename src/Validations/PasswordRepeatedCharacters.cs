@@ -10,7 +10,7 @@ namespace Validations
         {
             var regex = new Regex(@"(\w)*.*\1");
 
-            return !regex.IsMatch(_password);
+            return regex.IsMatch(_password);
         }
 
         public bool IsValid(string password)
@@ -20,7 +20,7 @@ namespace Validations
 
             _password = password;
 
-            return ContainsRepeatedCharacters();
+            return !ContainsRepeatedCharacters();
         }
     }
 }

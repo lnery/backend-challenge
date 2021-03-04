@@ -10,69 +10,9 @@ namespace Validations.Extension
     {
         public static PasswordStrength GetPasswordStrength(this PasswordValidation passwordValidation)
         {
-            int score = GetPasswordScore(passwordValidation);
+            var passwordStrengthValidation = new PasswordStrengthValidation(passwordValidation);
 
-            if (score < 50)
-                return PasswordStrength.Unacceptable;
-            else if (score < 60)
-                return PasswordStrength.Weak;
-            else if (score < 80)
-                return PasswordStrength.Acceptable;
-            else if (score < 100)
-                return PasswordStrength.Strong;
-            else
-                return PasswordStrength.Secure;
-        }
-
-        private static int GetPasswordScore(PasswordValidation passwordValidation)
-        {
-            if (string.IsNullOrEmpty(passwordValidation.password)) return 0;
-
-            int scoreBySize = GetScoreBySize(passwordValidation.passwordSize.GetQuantityOfCharacters());
-            int scoreByLowerCase = GetScoreByLowerCase(passwordValidation.passwordLowerCaseLetters.GetQuantityOfLowerCaseLetters());
-            int scoreScoreByUpperCase = GetScoreByUpperCase(passwordValidation.passwordUpperCaseLetters.GetQuantityOfUpperCaseLetters());
-            int scoreByDigits = GetScoreByDigits(passwordValidation.passwordDigits.GetQuantityOfDigits());
-            int scoreBySpecialCharacters = GetScoreBySpecialCharacters(passwordValidation.passwordSpecialCharacters.GetQuantityOfSpecialCharacters());
-            int scoreByRepeatedSequence = GetScoreByRepeatedSequence(!passwordValidation.passwordRepeatedCharacters.ContainsRepeatedCharacters());
-
-            return scoreBySize + scoreByLowerCase + scoreScoreByUpperCase + scoreByDigits + scoreBySpecialCharacters - scoreByRepeatedSequence;
-        }
-
-        private static int GetScoreBySize(int size)
-        {
-            return size * PasswordScore.BY_SIZE;
-        }
-
-        private static int GetScoreByLowerCase(int quantityOfLowerCase)
-        {
-            return Math.Min(2, quantityOfLowerCase) * PasswordScore.BY_LOWER_CASE;
-        }
-
-        private static int GetScoreByUpperCase(int quantityOfUpperCase)
-        {
-            return Math.Min(2, quantityOfUpperCase) * PasswordScore.BY_UPPER_CASE;
-        }
-
-        private static int GetScoreByDigits(int quantityOfDigits)
-        {
-            return Math.Min(2, quantityOfDigits) * PasswordScore.BY_DIGITS;
-        }
-
-        private static int GetScoreBySpecialCharacters(int quantityOfSpecialChars)
-        {
-            return Math.Min(2, quantityOfSpecialChars) * PasswordScore.BY_SPECIAL_CHARS;
-        }
-
-        private static int GetScoreByRepeatedSequence(bool hasRepeatedSequence)
-        {
-            if (hasRepeatedSequence)
-            {
-                return PasswordScore.BY_REPEATED_SEQUENCE;
-            }
-            else
-            {
-                return 0;
-            }
+            return passwordStrengthValidation.GetPasswordStrength();
         }
     }
 }
